@@ -1,0 +1,6 @@
+﻿  Player.cpp
+c:\users\gameuser\desktop\ai games\labs\lab2\lab1\player.cpp(67): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gameuser\desktop\ai games\labs\lab2\lab1\player.cpp(71): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gameuser\desktop\ai games\labs\lab2\lab1\player.cpp(74): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\ai games\labs\lab2\lab1\player.cpp(77): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Lab1.vcxproj -> C:\Users\gameuser\Desktop\AI Games\Labs\Lab2\Debug\Lab1.exe
