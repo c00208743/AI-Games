@@ -11,14 +11,14 @@ Player::Player() :
 	speed(0)
 {
 	
-	if (!texture.loadFromFile("rocket.png"))
+	if (!m_texture.loadFromFile("rocket.png"))
 	{
 		// error...
 	}
 	
-	sprite.setTexture(texture);
-	sprite.setOrigin(128, 128);
-	sprite.setPosition(m_position);
+	m_sprite.setTexture(m_texture);
+	m_sprite.setOrigin(128, 128);
+	m_sprite.setPosition(m_position);
 }
 
 /// <summary>
@@ -64,46 +64,48 @@ void Player::update(double dt)
 	//change rotation 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		sprite.rotate(-0.1);
+		m_sprite.rotate(-0.1);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		sprite.rotate(0.1);
+		m_sprite.rotate(0.1);
 	}
+
 	//Apply direction to sprite
-	float radians = sprite.getRotation()* M_PI / 180;
+	float radians = m_sprite.getRotation()* M_PI / 180;
 	direction.x = (cos(radians));
 	direction.y = (sin(radians));
-	sprite.setPosition(sprite.getPosition().x + (direction.x * speed), sprite.getPosition().y + (direction.y * speed));
+	m_sprite.setPosition(m_sprite.getPosition().x + (direction.x * speed), m_sprite.getPosition().y + (direction.y * speed));
 
 
 	//looping screen 
-	if (sprite.getPosition().x > 2100)
+	if (m_sprite.getPosition().x > 2100)
 	{
-		//m_shape.setPosition(-100, m_shape.getPosition().y);
-		sprite.setPosition(-100, sprite.getPosition().y);
+		m_sprite.setPosition(-100, m_sprite.getPosition().y);
 	}
-	if (sprite.getPosition().x < -100)
+	if (m_sprite.getPosition().x < -100)
 	{
-		//m_shape.setPosition(2100, m_shape.getPosition().y);
-		sprite.setPosition(2100, sprite.getPosition().y);
+		m_sprite.setPosition(2100, m_sprite.getPosition().y);
 	}
-	if (sprite.getPosition().y < -100)
+	if (m_sprite.getPosition().y < -100)
 	{
-		//m_shape.setPosition(m_shape.getPosition().y, 2100);
-		sprite.setPosition(sprite.getPosition().x, 2100);
+		m_sprite.setPosition(m_sprite.getPosition().x, 2100);
 	}
-	if (sprite.getPosition().y > 2100)
+	if (m_sprite.getPosition().y > 2100)
 	{
-		//m_shape.setPosition(m_shape.getPosition().y, -100);
-		sprite.setPosition(sprite.getPosition().x, -100);
+		m_sprite.setPosition(m_sprite.getPosition().x, -100);
 	}
 
-	//sprite.setPosition(m_shape.getPosition().x, m_shape.getPosition().y);
 }
 
 void Player::render(sf::RenderWindow & window)
 {
-	window.draw(sprite);
+	window.draw(m_sprite);
+}
+
+
+sf::Vector2f Player::getPosition()
+{
+	return m_sprite.getPosition();
 }
 

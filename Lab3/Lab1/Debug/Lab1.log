@@ -1,0 +1,6 @@
+﻿  Pursue.cpp
+c:\users\gameuser\desktop\ai games\labs\lab3\lab1\pursue.cpp(18): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gameuser\desktop\ai games\labs\lab3\lab1\pursue.cpp(36): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\ai games\labs\lab3\lab1\pursue.cpp(67): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\gameuser\desktop\ai games\labs\lab3\lab1\pursue.cpp(68): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  Lab1.vcxproj -> C:\Users\gameuser\Desktop\AI Games\Labs\Lab3\Debug\Lab1.exe

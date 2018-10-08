@@ -17,6 +17,9 @@ Game::Game()
 
 	m_player = new Player();
 	m_enemy = new Enemy();
+	m_seek = new Seek();
+	m_flee = new Flee();
+
 }
 
 
@@ -75,7 +78,9 @@ void Game::update(double dt)
 {
 	sf::Time deltaTime;
 	m_player->update(dt);
-	m_enemy->update(dt);
+	m_enemy->update(m_player->getPosition());
+	m_seek->update(m_player->getPosition());
+	m_flee->update(m_player->getPosition());
 }
 
 
@@ -89,6 +94,8 @@ void Game::render()
 	m_window.clear(sf::Color(0, 0, 0));
 	m_player->render(m_window);
 	m_enemy->render(m_window);
+	m_seek->render(m_window);
+	m_flee->render(m_window);
 	m_window.display();
 }
 
