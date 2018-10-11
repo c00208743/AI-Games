@@ -10,8 +10,16 @@ Wander::Wander() :
 	m_velocity(0, 0),
 	m_maxSpeed(0.5f)
 {
+
+	if (!m_font.loadFromFile("ALBA.TTF")) {
+		//error
+	}
+	m_text.setFont(m_font);
+	m_text.setFillColor(sf::Color::White);
+	m_text.setCharacterSize(20);
+	m_text.setString("Wander");
 	
-	if (!m_texture.loadFromFile("alien.png"))
+	if (!m_texture.loadFromFile("seek.png"))
 	{
 		// error...
 	}
@@ -21,6 +29,7 @@ Wander::Wander() :
 
 	m_velocity.x = getRandom(20, -10);
 	m_velocity.y = getRandom(20, -10);
+	m_sprite.setOrigin(128, 128);
 }
 
 
@@ -52,9 +61,11 @@ void Wander::boundary(float x, float y)
 void Wander::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
 {
 	kinematicWander(playerPosition);
+	repulseSteering(enemies);
 	m_position = m_position + m_velocity;
 	m_sprite.setPosition(m_position);
 	m_sprite.setRotation(m_orientation);
+	m_text.setPosition(m_position);
 	boundary(m_sprite.getPosition().x, m_sprite.getPosition().y);
 }
 
@@ -108,9 +119,74 @@ void Wander::kinematicWander(sf::Vector2f playerPosition)
 	m_velocity.x = (-sin(m_orientation))*m_maxSpeed;
 	m_velocity.y = cos(m_orientation) *m_maxSpeed;
 	
+
+}
+
+sf::Vector2f Wander::repulseSteering(std::vector<Enemy*> enemies)
+{
+	firstTarget = sf::Vector2f(NULL, NULL);
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		//relativePos = target.position - character.position
+		relativePos = enemies[i]->getPosition() - m_position;
+		//relativeVel = target.velocity - character.velocity
+		relativeVel = enemies[i]->getVelocity() - m_velocity;
+		//relativeSpeed = relativeVel.length()
+		relativeSpeed = std::sqrt(relativeVel.x*relativeVel.x + relativeVel.y* relativeVel.y);
+
+		//timeToCollision = (relativePos . relativeVel) / (relativeSpeed * relativeSpeed)
+		timeToCollision = ((relativePos.x * relativeVel.x) + (relativePos.y * relativeVel.y)) / (relativeSpeed * relativeSpeed);
+
+		// distance = relativePos.length()
+		distance = std::sqrt(relativePos.x*relativePos.x + relativePos.y* relativePos.y);
+		//minSeparation = distance – relativeSpeed * shortestTime
+		minSeparation = distance - (relativeSpeed * shortestTime);
+
+		if (minSeparation > 2 * radius) {
+
+			if (timeToCollision > 0 && timeToCollision < shortestTime) {
+				shortestTime = timeToCollision;
+				firstTarget = enemies[i]->getPosition();
+				firstMinSeparation = minSeparation;
+				firstDistance = distance;
+				firstRelativePos = relativePos;
+				firstRelativeVel = relativeVel;
+			}
+		}
+
+
+	}
+	if (firstTarget == sf::Vector2f(NULL, NULL)) {
+		return sf::Vector2f();
+		//break;
+	}
+
+	if (firstMinSeparation <= 0 || distance <2 * radius)
+	{
+		relativePos = firstTarget - m_position;
+		std::cout << "dirk" << std::endl;
+	}
+	else {
+		relativePos.x = firstRelativePos.x + firstRelativeVel.x * shortestTime;
+		relativePos.y = firstRelativePos.y + firstRelativeVel.y * shortestTime;
+	}
+
+	normalise(relativePos);
+	steering = relativePos * maxAcceleration;
+	return steering;
+}
+
+sf::Vector2f Wander::normalise(sf::Vector2f norm)
+{
+	float length = sqrt((norm.x * norm.x) + (norm.y * norm.y));
+	if (length != 0)
+		return sf::Vector2f(norm.x / length, norm.y / length);
+	else
+		return norm;
 }
 
 void Wander::render(sf::RenderWindow & window)
 {
 	window.draw(m_sprite);
+	window.draw(m_text);
 }

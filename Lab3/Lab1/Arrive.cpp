@@ -1,20 +1,20 @@
-#include "Pursue.h"
+#include "Arrive.h"
 
-Pursue::Pursue() :
-	m_position(500, 500),
+Arrive::Arrive() :
+	m_position(800, 800),
 	m_velocity(0, 0),
-	m_maxSpeed(1.0f),
+	m_maxSpeed(1.5f),
 	m_maxRotation(20.0f),
-	m_timeToTarget(100.0f),
-	maxTimePrediction(250.0f)
+	m_timeToTarget(100.0f)
 {
+
 	if (!m_font.loadFromFile("ALBA.TTF")) {
 		//error
 	}
 	m_text.setFont(m_font);
 	m_text.setFillColor(sf::Color::White);
 	m_text.setCharacterSize(20);
-	m_text.setString("Pursue");
+	m_text.setString("Arrive");
 
 	if (!m_texture.loadFromFile("seek.png")) {
 		//error
@@ -22,7 +22,6 @@ Pursue::Pursue() :
 
 	m_sprite.setTexture(m_texture);
 	m_sprite.setPosition(m_position);
-	
 	m_velocity.x = getRandom(20, -10);
 	m_velocity.y = getRandom(20, -10);
 
@@ -31,12 +30,12 @@ Pursue::Pursue() :
 }
 
 
-Pursue::~Pursue()
+Arrive::~Arrive()
 {
 
 }
 
-float Pursue::getNewOrientation(float currentOrientation, float velocity)
+float Arrive::getNewOrientation(float currentOrientation, float velocity)
 {
 	if (velocity >0)
 	{
@@ -48,7 +47,7 @@ float Pursue::getNewOrientation(float currentOrientation, float velocity)
 
 }
 
-void Pursue::boundary(float x, float y)
+void Arrive::boundary(float x, float y)
 {
 	if (x > 2100)
 	{
@@ -69,14 +68,14 @@ void Pursue::boundary(float x, float y)
 
 }
 
-float Pursue::getRandom(int a, int b)
+float Arrive::getRandom(int a, int b)
 {
 	srand(time(NULL));
 	float randVal = rand() % a + b;
 	return randVal;
 }
 
-void Pursue::kinematicSeek(sf::Vector2f playerPosition)
+void Arrive::kinematicSeek(sf::Vector2f playerPosition)
 {
 	m_velocity = playerPosition - m_position;
 	//Get magnitude of vector
@@ -92,8 +91,7 @@ void Pursue::kinematicSeek(sf::Vector2f playerPosition)
 	m_orientation = getNewOrientation(m_orientation, m_velocityF);
 
 }
-
-void Pursue::kinematicArrive(sf::Vector2f playerPosition)
+void Arrive::kinematicArrive(sf::Vector2f playerPosition)
 {
 	//Get magnitude of vector
 	m_velocityF = std::sqrt(m_velocity.x*m_velocity.x + m_velocity.y* m_velocity.y);
@@ -118,7 +116,7 @@ void Pursue::kinematicArrive(sf::Vector2f playerPosition)
 
 }
 
-sf::Vector2f Pursue::repulseSteering(std::vector<Enemy*> enemies)
+sf::Vector2f Arrive::repulseSteering(std::vector<Enemy*> enemies)
 {
 	firstTarget = sf::Vector2f(NULL, NULL);
 	for (int i = 0; i < enemies.size(); i++)
@@ -172,7 +170,15 @@ sf::Vector2f Pursue::repulseSteering(std::vector<Enemy*> enemies)
 	return steering;
 }
 
-sf::Vector2f Pursue::normalise(sf::Vector2f norm)
+sf::Vector2f Arrive::getPosition()
+{
+	return m_sprite.getPosition();
+}
+sf::Vector2f Arrive::getVelocity()
+{
+	return m_velocity;
+}
+sf::Vector2f Arrive::normalise(sf::Vector2f norm)
 {
 	float length = sqrt((norm.x * norm.x) + (norm.y * norm.y));
 	if (length != 0)
@@ -181,40 +187,11 @@ sf::Vector2f Pursue::normalise(sf::Vector2f norm)
 		return norm;
 }
 
-void Pursue::pursue(Player* player)
+void Arrive::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
 {
-	direction = player->getPosition() -m_position;
-	m_distance = std::sqrt(direction.x*direction.x + direction.y* direction.y);
-	speed = std::sqrt(m_velocity.x*m_velocity.x + m_velocity.y* m_velocity.y);
-	//std::cout << maxTimePrediction << std::endl;
-
-	if (speed <= m_distance / maxTimePrediction )
-	{
-		timePrediction = maxTimePrediction;
-	}
-	else {
-		timePrediction = m_distance / speed;
-	}
-	
-	newTarget = player->getPosition() + player->getVelocity() * timePrediction;
-	
-	//kinematicSeek(newTarget);
-	kinematicArrive(newTarget);
-}
-
-sf::Vector2f Pursue::getPosition()
-{
-	return m_sprite.getPosition();
-}
-sf::Vector2f Pursue::getVelocity()
-{
-	return m_velocity;
-}
-
-void Pursue::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
-{
-	pursue(player);
+	kinematicArrive(playerPosition);
 	repulseSteering(enemies);
+
 	m_position = m_position + m_velocity;
 
 	m_sprite.setPosition(m_position);
@@ -225,8 +202,9 @@ void Pursue::update(sf::Vector2f playerPosition, Player* player, std::vector<Ene
 }
 
 
-void Pursue::render(sf::RenderWindow & window)
+void Arrive::render(sf::RenderWindow & window)
 {
+
 	window.draw(m_sprite);
 	window.draw(m_text);
 }

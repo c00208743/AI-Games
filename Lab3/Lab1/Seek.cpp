@@ -8,17 +8,25 @@ Seek::Seek() :
 	m_timeToTarget(100.0f)
 {
 
+	if (!m_font.loadFromFile("ALBA.TTF")) {
+		//error
+	}
+	m_text.setFont(m_font);
+	m_text.setFillColor(sf::Color::White);
+	m_text.setCharacterSize(20);
+	m_text.setString("Seek");
+
 	if (!m_texture.loadFromFile("seek.png")) {
 		//error
 	}
 
 	m_sprite.setTexture(m_texture);
 	m_sprite.setPosition(m_position);
-	m_sprite.setScale(0.4, 0.4);
+	//m_sprite.setScale(0.4, 0.4);
 	m_velocity.x = getRandom(20, -10);
 	m_velocity.y = getRandom(20, -10);
 
-	m_sprite.setOrigin(m_position.x - (m_sprite.getTextureRect().width / 2), m_position.y - (m_sprite.getTextureRect().height / 2));
+	m_sprite.setOrigin(128, 128);
 
 }
 
@@ -182,13 +190,14 @@ sf::Vector2f Seek::normalise(sf::Vector2f norm)
 
 void Seek::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
 {
-	kinematicArrive(playerPosition);
+	kinematicSeek(playerPosition);
 	repulseSteering(enemies);
 
 	m_position = m_position + m_velocity;
 
 	m_sprite.setPosition(m_position);
 	m_sprite.setRotation(m_orientation);
+	m_text.setPosition(m_position);
 
 	boundary(m_sprite.getPosition().x, m_sprite.getPosition().y);
 }
@@ -196,5 +205,7 @@ void Seek::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy
 
 void Seek::render(sf::RenderWindow & window)
 {
+	
 	window.draw(m_sprite);
+	window.draw(m_text);
 }

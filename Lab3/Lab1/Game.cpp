@@ -21,10 +21,13 @@ Game::Game()
 	Enemy* m_seek = new Seek();
 	Enemy* m_flee = new Flee();
 	Enemy* m_pursue = new Pursue();
+	Enemy* m_arrive = new Arrive();
 
 	enemies.push_back(m_wander);
-	enemies.push_back(m_flee);
 	enemies.push_back(m_seek);
+	enemies.push_back(m_flee);
+	enemies.push_back(m_arrive);
+	enemies.push_back(m_arrive);
 	enemies.push_back(m_pursue);
 
 }
