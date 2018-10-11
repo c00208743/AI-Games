@@ -16,10 +16,16 @@ Game::Game()
 	m_window.setVerticalSyncEnabled(true);
 
 	m_player = new Player();
-	m_enemy = new Enemy();
-	m_seek = new Seek();
-	m_flee = new Flee();
-	m_pursue = new Pursue();
+
+	Enemy* m_wander = new Wander();
+	Enemy* m_seek = new Seek();
+	Enemy* m_flee = new Flee();
+	Enemy* m_pursue = new Pursue();
+
+	enemies.push_back(m_wander);
+	enemies.push_back(m_flee);
+	enemies.push_back(m_seek);
+	enemies.push_back(m_pursue);
 
 }
 
@@ -79,10 +85,12 @@ void Game::update(double dt)
 {
 	sf::Time deltaTime;
 	m_player->update(dt);
-	m_enemy->update(m_player->getPosition());
-	m_seek->update(m_player->getPosition());
-	m_flee->update(m_player->getPosition());
-	m_pursue->update(m_player->getPosition(),  m_player);
+
+
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		enemies[i]->update(m_player->getPosition(), m_player, enemies);
+	}
 }
 
 
@@ -95,10 +103,10 @@ void Game::render()
 {
 	m_window.clear(sf::Color(0, 0, 0));
 	m_player->render(m_window);
-	//m_enemy->render(m_window);
-	//m_seek->render(m_window);
-	//m_flee->render(m_window);
-	m_pursue->render(m_window);
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		enemies[i]->render(m_window);
+	}
 	m_window.display();
 }
 

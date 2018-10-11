@@ -84,7 +84,7 @@ void Flee::kinematicFlee(sf::Vector2f playerPosition)
 
 }
 
-void Flee::update(sf::Vector2f playerPosition)
+void Flee::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
 {
 	kinematicFlee(playerPosition);
 
@@ -96,6 +96,14 @@ void Flee::update(sf::Vector2f playerPosition)
 	boundry(m_sprite.getPosition().x, m_sprite.getPosition().y);
 }
 
+sf::Vector2f Flee::getPosition()
+{
+	return m_sprite.getPosition();
+}
+sf::Vector2f Flee::getVelocity()
+{
+	return m_velocity;
+}
 
 void Flee::render(sf::RenderWindow & window)
 {

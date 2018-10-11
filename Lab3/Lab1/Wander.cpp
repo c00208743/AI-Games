@@ -1,11 +1,11 @@
-#include "Enemy.h"
+#include "Wander.h"
 #include "Player.h"
 #include "math.h"
 
 
 #define M_PI   3.14159265358979323846264338327950288
 
-Enemy::Enemy() :
+Wander::Wander() :
 	m_position(0, 0),
 	m_velocity(0, 0),
 	m_maxSpeed(0.5f)
@@ -24,11 +24,11 @@ Enemy::Enemy() :
 }
 
 
-Enemy::~Enemy()
+Wander::~Wander()
 {
 }
 
-void Enemy::boundary(float x, float y)
+void Wander::boundary(float x, float y)
 {
 	if (x > 2000)
 	{
@@ -49,7 +49,7 @@ void Enemy::boundary(float x, float y)
 
 }
 
-void Enemy::update(sf::Vector2f playerPosition)
+void Wander::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
 {
 	kinematicWander(playerPosition);
 	m_position = m_position + m_velocity;
@@ -58,7 +58,7 @@ void Enemy::update(sf::Vector2f playerPosition)
 	boundary(m_sprite.getPosition().x, m_sprite.getPosition().y);
 }
 
-float Enemy::getNewOrientation(float currentOrientation, float velocity)
+float Wander::getNewOrientation(float currentOrientation, float velocity)
 {
 	if (velocity >0)
 	{
@@ -70,14 +70,24 @@ float Enemy::getNewOrientation(float currentOrientation, float velocity)
 
 }
 
-float Enemy::getRandom(int a, int b)
+float Wander::getRandom(int a, int b)
 {
 	srand(time(NULL));
 	float randVal = rand() % a + b;
 	return randVal;
 }
 
-void Enemy::kinematicWander(sf::Vector2f playerPosition)
+sf::Vector2f Wander::getPosition()
+{
+	return m_sprite.getPosition();
+}
+
+sf::Vector2f Wander::getVelocity()
+{
+	return m_velocity;
+}
+
+void Wander::kinematicWander(sf::Vector2f playerPosition)
 {
 	m_velocity = playerPosition - m_position;
 
@@ -100,7 +110,7 @@ void Enemy::kinematicWander(sf::Vector2f playerPosition)
 	
 }
 
-void Enemy::render(sf::RenderWindow & window)
+void Wander::render(sf::RenderWindow & window)
 {
 	window.draw(m_sprite);
 }

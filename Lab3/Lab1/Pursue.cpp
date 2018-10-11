@@ -116,7 +116,7 @@ void Pursue::pursue(Player* player)
 	direction = player->getPosition() -m_position;
 	distance = std::sqrt(direction.x*direction.x + direction.y* direction.y);
 	speed = std::sqrt(m_velocity.x*m_velocity.x + m_velocity.y* m_velocity.y);
-	std::cout << maxTimePrediction << std::endl;
+	//std::cout << maxTimePrediction << std::endl;
 
 	if (speed <= distance / maxTimePrediction )
 	{
@@ -132,8 +132,16 @@ void Pursue::pursue(Player* player)
 	kinematicArrive(newTarget);
 }
 
+sf::Vector2f Pursue::getPosition()
+{
+	return m_sprite.getPosition();
+}
+sf::Vector2f Pursue::getVelocity()
+{
+	return m_velocity;
+}
 
-void Pursue::update(sf::Vector2f playerPosition, Player* player)
+void Pursue::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
 {
 	pursue(player);
 

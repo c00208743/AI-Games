@@ -1,6 +1,6 @@
 #pragma once
 #include "Player.h"
-#include "Enemy.h"
+#include "Wander.h"
 #include "Seek.h"
 #include "Flee.h"
 #include "Pursue.h"
@@ -21,10 +21,11 @@ private:
 
 	sf::RenderWindow m_window; // main SFML window
 	Player* m_player;
-	Enemy* m_enemy;
+	/*Wander* m_wander;
 	Seek *m_seek;
 	Flee *m_flee;
-	Pursue *m_pursue;
+	Pursue *m_pursue;*/
+	std::vector<Enemy*> enemies;
 
 };
 

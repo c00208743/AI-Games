@@ -3,8 +3,9 @@
 #include <iostream>
 #include <random>
 #include "Player.h"
+#include "Enemy.h"
 
-class Pursue
+class Pursue : public Enemy
 {
 public:
 	Pursue();
@@ -14,10 +15,12 @@ public:
 	void kinematicArrive(sf::Vector2f playerPosition);
 	void boundary(float x, float y);
 	float getRandom(int x, int y);
-	void update(sf::Vector2f playerPosition, Player* player);
+	void update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies);
 	void render(sf::RenderWindow & window);
 	//Lab3
 	void pursue(Player* player);
+	 sf::Vector2f getPosition();
+	 sf::Vector2f getVelocity();
 
 
 private:
