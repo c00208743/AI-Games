@@ -1,9 +1,9 @@
-#include "Flee.h"
+#include "Arrive2.h"
 
-Flee::Flee() :
-	m_position(800, 400),
+Arrive2::Arrive2() :
+	m_position(1200, 1300),
 	m_velocity(0, 0),
-	m_maxSpeed(1.0f),
+	m_maxSpeed(0.5f),
 	m_maxRotation(20.0f),
 	m_timeToTarget(100.0f),
 	radius(200.0f),
@@ -16,7 +16,7 @@ Flee::Flee() :
 	m_text.setFont(m_font);
 	m_text.setFillColor(sf::Color::White);
 	m_text.setCharacterSize(20);
-	m_text.setString("Flee");
+	m_text.setString("Arrive");
 
 	if (!m_texture.loadFromFile("seek.png")) {
 		//error
@@ -24,7 +24,6 @@ Flee::Flee() :
 
 	m_sprite.setTexture(m_texture);
 	m_sprite.setPosition(m_position);
-	
 	m_velocity.x = getRandom(20, -10);
 	m_velocity.y = getRandom(20, -10);
 
@@ -33,11 +32,12 @@ Flee::Flee() :
 }
 
 
-Flee::~Flee()
+Arrive2::~Arrive2()
 {
 
 }
-float Flee::getNewOrientation(float currentOrientation, float velocity)
+
+float Arrive2::getNewOrientation(float currentOrientation, float velocity)
 {
 	if (velocity >0)
 	{
@@ -48,41 +48,41 @@ float Flee::getNewOrientation(float currentOrientation, float velocity)
 	}
 
 }
-void Flee::boundry(float x, float y)
+
+void Arrive2::boundary(float x, float y)
 {
-	if (x > 2000)
+	if (x > 2100)
 	{
 		m_position.x = -100;
 	}
-	if (x < 0)
+	if (x < -100)
 	{
 		m_position.x = 2100;
 	}
-	if (y < 0)
+	if (y < -100)
 	{
 		m_position.y = 2100;
 	}
-	if (y > 2000)
+	if (y > 2100)
 	{
 		m_position.y = -100;
 	}
+
 }
 
-float Flee::getRandom(int a, int b)
+float Arrive2::getRandom(int a, int b)
 {
 	srand(time(NULL));
 	float randVal = rand() % a + b;
 	return randVal;
-
 }
 
-
-void Flee::kinematicFlee(sf::Vector2f playerPosition)
+void Arrive2::kinematicSeek(sf::Vector2f playerPosition)
 {
-	m_velocity = m_position - playerPosition;
+	m_velocity = playerPosition - m_position;
 	//Get magnitude of vector
 	m_velocityF = std::sqrt(m_velocity.x*m_velocity.x + m_velocity.y* m_velocity.y);
-	//m_velocityF = m_velocityF * m_maxSpeed;
+
 	//Normalize vector
 	m_velocity.x = m_velocity.x / m_velocityF;
 	m_velocity.y = m_velocity.y / m_velocityF;
@@ -91,10 +91,36 @@ void Flee::kinematicFlee(sf::Vector2f playerPosition)
 	m_velocity.y = m_velocity.y * m_maxSpeed;
 
 	m_orientation = getNewOrientation(m_orientation, m_velocityF);
+	m_orientation = m_orientation + 180;
+
+}
+void Arrive2::kinematicArrive(sf::Vector2f playerPosition)
+{
+	//Get magnitude of vector
+	m_velocityF = std::sqrt(m_velocity.x*m_velocity.x + m_velocity.y* m_velocity.y);
+
+	m_velocity = playerPosition - m_position;
+
+	if (m_velocityF >= 0)
+	{
+		m_velocity = m_velocity / m_timeToTarget;
+
+		if (m_velocityF > m_maxSpeed) {
+
+			//Normalize vector
+			m_velocity.x = m_velocity.x / m_velocityF;
+			m_velocity.y = m_velocity.y / m_velocityF;
+			m_velocity = m_velocity * m_maxSpeed;
+
+		}
+
+		m_orientation = getNewOrientation(m_orientation, m_velocityF);
+		m_orientation = m_orientation + 180;
+	}
 
 }
 
-sf::Vector2f Flee::repulseSteering(std::vector<Enemy*> enemies)
+sf::Vector2f Arrive2::repulseSteering(std::vector<Enemy*> enemies)
 {
 	firstTarget = sf::Vector2f(NULL, NULL);
 	for (int i = 0; i < enemies.size(); i++)
@@ -148,16 +174,7 @@ sf::Vector2f Flee::repulseSteering(std::vector<Enemy*> enemies)
 	return steering;
 }
 
-sf::Vector2f Flee::normalise(sf::Vector2f norm)
-{
-	float length = sqrt((norm.x * norm.x) + (norm.y * norm.y));
-	if (length != 0)
-		return sf::Vector2f(norm.x / length, norm.y / length);
-	else
-		return norm;
-}
-
-void Flee::collison(std::vector<Enemy*> enemies)
+void Arrive2::collison(std::vector<Enemy*> enemies)
 {
 	for (int i = 0; i < enemies.size(); i++)
 	{
@@ -178,7 +195,7 @@ void Flee::collison(std::vector<Enemy*> enemies)
 				crash = true;
 				m_velocity = -m_velocity;
 				m_orientation = -m_orientation;
-				//std::cout << "Collided Flee" << std::endl;
+				//std::cout << "Collided Arrive" << std::endl;
 
 			}
 
@@ -190,35 +207,47 @@ void Flee::collison(std::vector<Enemy*> enemies)
 	}
 }
 
-void Flee::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
+
+sf::Vector2f Arrive2::getPosition()
 {
-	//kinematicFlee(playerPosition);
+	return m_sprite.getPosition();
+}
+sf::Vector2f Arrive2::getVelocity()
+{
+	return m_velocity;
+}
+sf::Vector2f Arrive2::normalise(sf::Vector2f norm)
+{
+	float length = sqrt((norm.x * norm.x) + (norm.y * norm.y));
+	if (length != 0)
+		return sf::Vector2f(norm.x / length, norm.y / length);
+	else
+		return norm;
+}
+
+void Arrive2::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
+{
+	//kinematicArrive(playerPosition);
+	//repulseSteering(enemies);
+	collison(enemies);
 	if (crash == false)
 	{
-		kinematicFlee(playerPosition);
+		kinematicArrive(playerPosition);
 	}
-	collison(enemies);
-	//repulseSteering(enemies);
+
 	m_position = m_position + m_velocity;
 
 	m_sprite.setPosition(m_position);
 	m_sprite.setRotation(m_orientation);
 	m_text.setPosition(m_position);
 
-	boundry(m_sprite.getPosition().x, m_sprite.getPosition().y);
+	boundary(m_sprite.getPosition().x, m_sprite.getPosition().y);
 }
 
-sf::Vector2f Flee::getPosition()
-{
-	return m_sprite.getPosition();
-}
-sf::Vector2f Flee::getVelocity()
-{
-	return m_velocity;
-}
 
-void Flee::render(sf::RenderWindow & window)
+void Arrive2::render(sf::RenderWindow & window)
 {
+
 	window.draw(m_sprite);
 	window.draw(m_text);
 }

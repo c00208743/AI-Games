@@ -5,6 +5,7 @@
 #include "Flee.h"
 #include "Pursue.h"
 #include "Arrive.h"
+#include "Arrive2.h"
 #include <SFML/Graphics.hpp>
 
 class Game

@@ -22,12 +22,14 @@ Game::Game()
 	Enemy* m_flee = new Flee();
 	Enemy* m_pursue = new Pursue();
 	Enemy* m_arrive = new Arrive();
+	Enemy* m_arrive2 = new Arrive2();
 
 	enemies.push_back(m_wander);
 	enemies.push_back(m_seek);
 	enemies.push_back(m_flee);
 	enemies.push_back(m_arrive);
 	enemies.push_back(m_arrive);
+	enemies.push_back(m_arrive2);
 	enemies.push_back(m_pursue);
 
 }

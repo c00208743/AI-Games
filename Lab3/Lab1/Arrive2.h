@@ -4,11 +4,11 @@
 #include <random>
 #include "Enemy.h"
 
-class Arrive : public Enemy
+class Arrive2 : public Enemy
 {
 public:
-	Arrive();
-	~Arrive();
+	Arrive2();
+	~Arrive2();
 	float getNewOrientation(float currentOrientation, float velocity);
 	void kinematicSeek(sf::Vector2f playerPosition);
 	void kinematicArrive(sf::Vector2f playerPosition);

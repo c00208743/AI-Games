@@ -1,11 +1,13 @@
 #include "Arrive.h"
 
 Arrive::Arrive() :
-	m_position(800, 800),
+	m_position(800, 1500),
 	m_velocity(0, 0),
 	m_maxSpeed(1.5f),
 	m_maxRotation(20.0f),
-	m_timeToTarget(100.0f)
+	m_timeToTarget(100.0f),
+	radius(200.0f),
+	m_threshold(30.0f)
 {
 
 	if (!m_font.loadFromFile("ALBA.TTF")) {
@@ -89,6 +91,7 @@ void Arrive::kinematicSeek(sf::Vector2f playerPosition)
 	m_velocity.y = m_velocity.y * m_maxSpeed;
 
 	m_orientation = getNewOrientation(m_orientation, m_velocityF);
+	m_orientation = m_orientation + 180;
 
 }
 void Arrive::kinematicArrive(sf::Vector2f playerPosition)
@@ -112,6 +115,7 @@ void Arrive::kinematicArrive(sf::Vector2f playerPosition)
 		}
 
 		m_orientation = getNewOrientation(m_orientation, m_velocityF);
+		m_orientation = m_orientation + 180;
 	}
 
 }
@@ -170,6 +174,40 @@ sf::Vector2f Arrive::repulseSteering(std::vector<Enemy*> enemies)
 	return steering;
 }
 
+void Arrive::collison(std::vector<Enemy*> enemies)
+{
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		n_direction = enemies[i]->getPosition() - m_position;
+		n_distance = std::sqrt(n_direction.x*n_direction.x + n_direction.y* n_direction.y);
+
+		if (n_distance <= radius)
+		{
+			float dot = (m_velocity.x * n_direction.x) + (m_velocity.y * n_direction.y);
+			float det = (m_velocity.x * n_direction.y) - (m_velocity.y * n_direction.x);
+
+			float angle = atan2(det, dot);
+			angle = (180 / 3.14) * angle;
+
+
+			if (angle >= -m_threshold && angle <= m_threshold)
+			{
+				crash = true;
+				m_velocity = -m_velocity;
+				m_orientation = -m_orientation;
+				//std::cout << "Collided Arrive" << std::endl;
+
+			}
+
+		}
+		if (crash == true && n_distance > radius)
+		{
+			crash = false;
+		}
+	}
+}
+
+
 sf::Vector2f Arrive::getPosition()
 {
 	return m_sprite.getPosition();
@@ -189,8 +227,13 @@ sf::Vector2f Arrive::normalise(sf::Vector2f norm)
 
 void Arrive::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
 {
-	kinematicArrive(playerPosition);
-	repulseSteering(enemies);
+	//kinematicArrive(playerPosition);
+	//repulseSteering(enemies);
+	collison(enemies);
+	if (crash == false)
+	{
+		kinematicArrive(playerPosition);
+	}
 
 	m_position = m_position + m_velocity;
 

@@ -1,12 +1,14 @@
 #include "Pursue.h"
 
 Pursue::Pursue() :
-	m_position(500, 500),
+	m_position(1000, 1700),
 	m_velocity(0, 0),
 	m_maxSpeed(1.0f),
 	m_maxRotation(20.0f),
 	m_timeToTarget(100.0f),
-	maxTimePrediction(250.0f)
+	maxTimePrediction(250.0f),
+	radius(200.0f),
+	m_threshold(30.0f)
 {
 	if (!m_font.loadFromFile("ALBA.TTF")) {
 		//error
@@ -23,9 +25,6 @@ Pursue::Pursue() :
 	m_sprite.setTexture(m_texture);
 	m_sprite.setPosition(m_position);
 	
-	m_velocity.x = getRandom(20, -10);
-	m_velocity.y = getRandom(20, -10);
-
 	m_sprite.setOrigin(128, 128);
 
 }
@@ -90,7 +89,7 @@ void Pursue::kinematicSeek(sf::Vector2f playerPosition)
 	m_velocity.y = m_velocity.y * m_maxSpeed;
 
 	m_orientation = getNewOrientation(m_orientation, m_velocityF);
-
+	
 }
 
 void Pursue::kinematicArrive(sf::Vector2f playerPosition)
@@ -114,6 +113,7 @@ void Pursue::kinematicArrive(sf::Vector2f playerPosition)
 		}
 
 		m_orientation = getNewOrientation(m_orientation, m_velocityF);
+		m_orientation = m_orientation + 180;
 	}
 
 }
@@ -202,6 +202,39 @@ void Pursue::pursue(Player* player)
 	kinematicArrive(newTarget);
 }
 
+void Pursue::collison(std::vector<Enemy*> enemies)
+{
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		n_direction = enemies[i]->getPosition() - m_position;
+		n_distance = std::sqrt(n_direction.x*n_direction.x + n_direction.y* n_direction.y);
+
+		if (n_distance <= radius)
+		{
+			float dot = (m_velocity.x * n_direction.x) + (m_velocity.y * n_direction.y);
+			float det = (m_velocity.x * n_direction.y) - (m_velocity.y * n_direction.x);
+
+			float angle = atan2(det, dot);
+			angle = (180 / 3.14) * angle;
+
+
+			if (angle >= -m_threshold && angle <= m_threshold)
+			{
+				crash = true;
+				m_velocity = -m_velocity;
+				m_orientation = -m_orientation;
+				//std::cout << "Collided Pursue" << std::endl;
+
+			}
+
+		}
+		if (crash == true && n_distance > radius)
+		{
+			crash = false;
+		}
+	}
+}
+
 sf::Vector2f Pursue::getPosition()
 {
 	return m_sprite.getPosition();
@@ -213,8 +246,15 @@ sf::Vector2f Pursue::getVelocity()
 
 void Pursue::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
 {
-	pursue(player);
-	repulseSteering(enemies);
+	collison(enemies);
+	
+
+	if (crash == false)
+	{
+		pursue(player);
+
+	}
+	//repulseSteering(enemies);
 	m_position = m_position + m_velocity;
 
 	m_sprite.setPosition(m_position);

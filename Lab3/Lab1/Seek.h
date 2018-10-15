@@ -17,6 +17,7 @@ public:
 	void update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies);
 	void render(sf::RenderWindow & window);
 	sf::Vector2f repulseSteering(std::vector<Enemy*> enemies);
+	void collison(std::vector<Enemy*> enemies);
 	sf::Vector2f getPosition();
 	sf::Vector2f getVelocity();
 	sf::Vector2f normalise(sf::Vector2f norm);
@@ -35,7 +36,6 @@ private:
 	sf::Font m_font;
 	sf::Text m_text;
 
-	//cone of vision
 	//double shortestTime = std::numeric_limits<double>::infinity();
 	double shortestTime = 2000;
 	sf::Vector2f firstTarget;
@@ -47,10 +47,17 @@ private:
 	double firstMinSeparation=0;
 	double firstDistance = 0;
 	double distance = 0;
-	float radius= 300;
+	float radius;
 	float relativeSpeed = 0;
 	float maxAcceleration = 3;
 	double timeToCollision = 0;
 	double minSeparation = 0;
+
+	//cone of vision
+	sf::Vector2f n_direction;
+	float n_orientation;
+	double n_distance = 0;
+	float m_threshold;
+	bool crash = false;
 	
 };

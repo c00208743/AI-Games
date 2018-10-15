@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Arrive.cpp" />
+    <ClCompile Include="Arrive2.cpp" />
     <ClCompile Include="Wander.cpp" />
     <ClCompile Include="Flee.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -143,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arrive.h" />
+    <ClInclude Include="Arrive2.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Wander.h" />
     <ClInclude Include="Flee.h" />

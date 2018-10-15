@@ -6,9 +6,11 @@
 #define M_PI   3.14159265358979323846264338327950288
 
 Wander::Wander() :
-	m_position(0, 0),
+	m_position(1500, 800),
 	m_velocity(0, 0),
-	m_maxSpeed(0.5f)
+	m_maxSpeed(0.5f),
+	radius(100.0f),
+	m_threshold(30.0f)
 {
 
 	if (!m_font.loadFromFile("ALBA.TTF")) {
@@ -37,6 +39,39 @@ Wander::~Wander()
 {
 }
 
+void Wander::collison(std::vector<Enemy*> enemies)
+{
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		n_direction = enemies[i]->getPosition() - m_position;
+		n_distance = std::sqrt(n_direction.x*n_direction.x + n_direction.y* n_direction.y);
+
+		if (n_distance <= radius)
+		{
+			float dot = (m_velocity.x * n_direction.x) + (m_velocity.y * n_direction.y);
+			float det = (m_velocity.x * n_direction.y) - (m_velocity.y * n_direction.x);
+
+			float angle = atan2(det, dot);
+			angle = (180 / 3.14) * angle;
+
+
+			if (angle >= -m_threshold && angle <= m_threshold)
+			{
+				crash = true;
+				m_velocity = -m_velocity;
+				m_orientation = -m_orientation;
+				std::cout << "Collided Wander" << std::endl;
+
+			}
+
+		}
+		if (crash == true && n_distance > radius)
+		{
+			crash = false;
+		}
+	}
+}
+
 void Wander::boundary(float x, float y)
 {
 	if (x > 2000)
@@ -60,8 +95,13 @@ void Wander::boundary(float x, float y)
 
 void Wander::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
 {
-	kinematicWander(playerPosition);
-	repulseSteering(enemies);
+	collison(enemies);
+	if (crash == false)
+	{
+		kinematicWander(playerPosition);
+	}
+	
+	//repulseSteering(enemies);
 	m_position = m_position + m_velocity;
 	m_sprite.setPosition(m_position);
 	m_sprite.setRotation(m_orientation);
@@ -76,6 +116,7 @@ float Wander::getNewOrientation(float currentOrientation, float velocity)
 		return (std::atan2(-m_velocity.x, m_velocity.y) * 180.0 / M_PI);
 	}
 	else {
+		
 		return currentOrientation;
 	}
 

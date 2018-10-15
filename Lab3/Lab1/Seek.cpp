@@ -5,7 +5,10 @@ Seek::Seek() :
 	m_velocity(0, 0),
 	m_maxSpeed(0.5f),
 	m_maxRotation(20.0f),
-	m_timeToTarget(100.0f)
+	m_timeToTarget(100.0f), 
+	radius(200.0f),
+	m_threshold(30.0f)
+
 {
 
 	if (!m_font.loadFromFile("ALBA.TTF")) {
@@ -90,6 +93,7 @@ void Seek::kinematicSeek(sf::Vector2f playerPosition)
 	m_velocity.y = m_velocity.y * m_maxSpeed;
 
 	m_orientation = getNewOrientation(m_orientation, m_velocityF);
+	m_orientation = m_orientation + 180;
 
 }
 void Seek::kinematicArrive(sf::Vector2f playerPosition)
@@ -113,6 +117,7 @@ void Seek::kinematicArrive(sf::Vector2f playerPosition)
 		}
 
 		m_orientation = getNewOrientation(m_orientation, m_velocityF);
+		m_orientation = m_orientation + 180;
 	}
 
 }
@@ -134,9 +139,10 @@ sf::Vector2f Seek::repulseSteering(std::vector<Enemy*> enemies)
 
 		// distance = relativePos.length()
 		distance = std::sqrt(relativePos.x*relativePos.x + relativePos.y* relativePos.y);
+		
 		//minSeparation = distance – relativeSpeed * shortestTime
 		minSeparation = distance - (relativeSpeed * shortestTime);
-
+		//std::cout << minSeparation << std::endl;
 		if (minSeparation > 2 * radius) {
 
 			if (timeToCollision > 0 && timeToCollision < shortestTime) {
@@ -153,8 +159,9 @@ sf::Vector2f Seek::repulseSteering(std::vector<Enemy*> enemies)
 	}
 	if (firstTarget == sf::Vector2f(NULL, NULL)) {
 		return sf::Vector2f();
-		//break;
+
 	}
+
 		
 	if (firstMinSeparation <= 0 || distance <2 * radius)
 	{
@@ -170,6 +177,48 @@ sf::Vector2f Seek::repulseSteering(std::vector<Enemy*> enemies)
 	steering = relativePos * maxAcceleration;
 	return steering;
 }
+
+
+void Seek::collison(std::vector<Enemy*> enemies)
+{
+	for (int i = 0; i < enemies.size(); i++)
+	{
+
+			//Vector player to enemy
+			n_direction = enemies[i]->getPosition() - m_position;
+			n_distance = std::sqrt(n_direction.x*n_direction.x + n_direction.y* n_direction.y);
+
+
+
+			if (n_distance <= radius)
+			{
+				float dot = (m_velocity.x * n_direction.x) + (m_velocity.y * n_direction.y);
+				float det = (m_velocity.x * n_direction.y) - (m_velocity.y * n_direction.x);
+
+				float angle = atan2(det, dot);
+				angle = (180 / 3.14) * angle;
+
+
+				if (angle >= -m_threshold && angle <= m_threshold)
+				{
+					crash = true;
+					m_velocity = -m_velocity;
+					m_orientation = -m_orientation;
+					std::cout << "Collided Pursue" << std::endl;
+
+				}
+
+
+			}
+			if (crash == 2 && n_distance > radius * 2)
+			{
+				crash = false;
+			}
+
+		
+	}
+}
+
 
 sf::Vector2f Seek::getPosition()
 {
@@ -189,9 +238,15 @@ sf::Vector2f Seek::normalise(sf::Vector2f norm)
 }
 
 void Seek::update(sf::Vector2f playerPosition, Player* player, std::vector<Enemy*> enemies)
-{
-	kinematicSeek(playerPosition);
-	repulseSteering(enemies);
+{	
+	collison(enemies);
+	if (crash == false)
+	{
+		kinematicSeek(playerPosition);
+	}
+	
+	//kinematicSeek(playerPosition);
+	//repulseSteering(enemies);
 
 	m_position = m_position + m_velocity;
 

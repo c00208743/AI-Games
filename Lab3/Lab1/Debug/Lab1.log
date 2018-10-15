@@ -1,8 +1,10 @@
-﻿  Arrive.cpp
-c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive.cpp(42): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive.cpp(73): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive.cpp(74): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive.cpp(122): warning C4018: '<': signed/unsigned mismatch
-c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive.cpp(164): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive.cpp(165): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+﻿  Arrive2.cpp
+c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive2.cpp(44): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive2.cpp(75): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive2.cpp(76): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive2.cpp(126): warning C4018: '<': signed/unsigned mismatch
+c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive2.cpp(168): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive2.cpp(169): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive2.cpp(179): warning C4018: '<': signed/unsigned mismatch
+c:\users\gameuser\desktop\ai games\labs\lab3\lab1\arrive2.cpp(190): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   Lab1.vcxproj -> C:\Users\gameuser\Desktop\AI Games\Labs\Lab3\Debug\Lab1.exe

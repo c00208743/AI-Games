@@ -19,6 +19,7 @@ public:
 	sf::Vector2f getVelocity();
 	sf::Vector2f repulseSteering(std::vector<Enemy*> enemies);
 	sf::Vector2f normalise(sf::Vector2f norm);
+	void collison(std::vector<Enemy*> enemies);
 
 private:
 	float m_timeToTarget;
@@ -51,4 +52,10 @@ private:
 	float maxAcceleration = 3;
 	double timeToCollision = 0;
 	double minSeparation = 0;
+	//cone of vision
+	sf::Vector2f n_direction;
+	float n_orientation;
+	double n_distance = 0;
+	float m_threshold;
+	bool crash = false;
 };
