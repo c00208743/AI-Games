@@ -1,0 +1,7 @@
+﻿  Game.cpp
+c:\users\gameuser\desktop\ai games\labs\lab6\lab1\game.cpp(28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gameuser\desktop\ai games\labs\lab6\lab1\game.cpp(68): warning C4244: '-=': conversion from 'const double' to 'sf::Int32', possible loss of data
+c:\users\gameuser\desktop\ai games\labs\lab6\lab1\game.cpp(138): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\gameuser\desktop\ai games\labs\lab6\lab1\game.cpp(168): warning C4018: '<': signed/unsigned mismatch
+c:\users\gameuser\desktop\ai games\labs\lab6\lab1\game.cpp(400): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Lab1.vcxproj -> C:\Users\gameuser\Desktop\AI Games\Labs\Lab6\Debug\Lab1.exe
